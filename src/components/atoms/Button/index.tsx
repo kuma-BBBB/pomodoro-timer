@@ -6,5 +6,9 @@ type Props = {
 }
 
 export const Button: FC<Props> = ({ children, onClick }) => {
-  return <button onClick={onClick}>{children}</button>
+  return (
+    <button className="p-3 w-fit" onClick={onClick}>
+      {children}
+    </button>
+  )
 }
