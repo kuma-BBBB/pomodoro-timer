@@ -3,6 +3,6 @@
 ## Getting started
 
 ```
-pnpm install
-pnpm dev
+yarn install
+yarn dev
 ```
