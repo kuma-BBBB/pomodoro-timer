@@ -1,0 +1,43 @@
+name: Visual regression test by Chromatic
+run-name: visual regression test by Chromatic
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  chromatic-deployment:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Install dependencies
+        run: yarn
+
+        # 👇 Adds Chromatic as a step in the workflow
+      - name: Publish Project 1 to Chromatic
+        uses: chromaui/action@v1
+        id: chromatic
+        # Chromatic GitHub Action options
+        with:
+          # 👇 Chromatic projectToken, refer to the manage page to obtain it.
+          projectToken: ${{ secrets.CHROMATIC_PROJECT_TOKEN }}
+
+      - name: Find Comment
+        uses: peter-evans/find-comment@v2
+        id: fc
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-includes: Chromatic diff
+
+      - name: Create or update comment
+        uses: peter-evans/create-or-update-comment@v2
+        with:
+          comment-id: ${{ steps.fc.outputs.comment-id }}
+          issue-number: ${{ github.event.pull_request.number }}
+          body: |
+            Chromatic diff
+            {{ steps.chromatic.outputs.url }}
+            {{ steps.chromatic.outputs.buildUrl }}
+            {{ steps.chromatic.outputs.storybookUrl }}
+            {{ steps.chromatic.outputs.code }}
+          edit-mode: replace
