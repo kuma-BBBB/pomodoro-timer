@@ -4182,7 +4182,7 @@ clsx@1.1.0:
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.1.0.tgz#62937c6adfea771247c34b54d320fb99624f5702"
   integrity sha512-3avwM37fSK5oP6M5rQ9CNe99lwxhXDOeSWVPAOYF6OazUTgZCMb0yWlJpmdD74REy1gkEaFiub2ULv4fq9GUhA==
 
-clsx@^1.0.4:
+clsx@^1.0.4, clsx@^1.2.1:
   version "1.2.1"
   resolved "https://registry.yarnpkg.com/clsx/-/clsx-1.2.1.tgz#0ddc4a20a549b59c93a4116bb26f5294ca17dc12"
   integrity sha512-EcR6r5a8bj6pu3ycsa/E/cKVGuTgZJZdsyUYHOksG/UHIiKfjxzRxYJpyVBwYaQeOvghal9fcc4PidlgzugAQg==
@@ -7603,6 +7603,11 @@ markdown-escapes@^1.0.0:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/markdown-escapes/-/markdown-escapes-1.0.4.tgz#c95415ef451499d7602b91095f3c8e8975f78535"
   integrity sha512-8z4efJYk43E0upd0NbVXwgSTQs6cT3T06etieCMEg7dRbzCbxUCK/GHlX8mhHRDcp+OLlHkPKsvqQTCvsRl2cg==
+
+material-icons@^1.12.1:
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/material-icons/-/material-icons-1.12.1.tgz#4d6347c649a9a0ba5da3ba5d43566af7b69f1eab"
+  integrity sha512-M5TVqeT2ItFNntT79+ttOQi9jSXfenJCsLZcwi1GA83LlYJ2d+gH4DbuRbMF+ZPvqD+jO8JXwl5LC8Orm2oAuQ==
 
 md5.js@^1.3.4:
   version "1.3.5"
