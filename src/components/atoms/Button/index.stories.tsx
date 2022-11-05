@@ -1,11 +1,12 @@
-import { ComponentMeta, ComponentStory } from '@storybook/react'
-
 import { Button } from './'
 
-export default {
+import type { ComponentMeta, ComponentStory } from '@storybook/react'
+
+const meta: ComponentMeta<typeof Button> = {
   title: 'atoms/Button',
   component: Button,
-} as ComponentMeta<typeof Button>
+}
+export default meta
 
 const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />
 

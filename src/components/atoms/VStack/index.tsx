@@ -7,22 +7,20 @@ type Props = {
   justifyContent?: 'center' | 'start' | 'end' | 'between' | 'around' | 'evenly'
   alignItems?: 'center' | 'start' | 'end' | 'baseline' | 'stretch'
   width?: string
-  gap?: number
+  className?: string
 }
 export const VStack: FC<Props> = ({
   children,
   justifyContent = 'start',
   alignItems = 'start',
-  gap,
+  className = '',
 }) => {
   const classNames = [
     'flex flex-col',
     `justify-${justifyContent}`,
     `items-${alignItems}`,
+    className,
   ]
-  if (gap !== undefined) {
-    classNames.push(`gap-${gap}`)
-  }
 
   return <div className={clsx(classNames)}>{children}</div>
 }

@@ -2,7 +2,7 @@ import type { FC, MouseEventHandler, ReactNode } from 'react'
 
 type Props = {
   children: ReactNode
-  onClick: MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 export const IconButton: FC<Props> = ({ children, onClick }) => {

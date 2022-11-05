@@ -34,11 +34,13 @@ export const useTimer = (duration: number): Return => {
     }, 1000)
     setIntervalId(id)
 
-    setTimerId(
-      setTimeout(() => {
-        clearInterval(id)
-      }, time)
-    )
+    const currentTimerId = setTimeout(() => {
+      clearInterval(id)
+      setTimerId(undefined)
+      setIntervalId(undefined)
+    }, time + 1000)
+
+    setTimerId(currentTimerId)
   }, [])
 
   const start = useCallback(
@@ -65,8 +67,13 @@ export const useTimer = (duration: number): Return => {
       clearTimeout(timerId)
       setIntervalId(undefined)
       setTimerId(undefined)
+    } else {
+      if (time === 0) {
+        // タイマーのカウントが0の場合リセットする
+        setTime(duration)
+      }
     }
-  }, [timerId, intervalId])
+  }, [timerId, intervalId, time, duration])
 
   const format = (number: number): string => {
     const second = Math.round(number / 1000)
