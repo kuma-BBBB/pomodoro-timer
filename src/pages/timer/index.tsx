@@ -1,5 +1,7 @@
+import { TimerTemplate } from '@/components/templates'
+
 const Timer = () => {
-  return <>Hello Timer</>
+  return <TimerTemplate />
 }
 
 export default Timer

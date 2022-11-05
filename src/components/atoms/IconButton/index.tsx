@@ -3,12 +3,14 @@ import type { FC, MouseEventHandler, ReactNode } from 'react'
 type Props = {
   children: ReactNode
   onClick: MouseEventHandler<HTMLButtonElement>
-  type?: 'primary' | 'outline'
 }
 
-export const Button: FC<Props> = ({ children, onClick }) => {
+export const IconButton: FC<Props> = ({ children, onClick }) => {
   return (
-    <button className="p-3 w-fit" onClick={onClick}>
+    <button
+      onClick={onClick}
+      className="rounded-full neumorphism w-12 h-12 flex items-center justify-center"
+    >
       {children}
     </button>
   )
