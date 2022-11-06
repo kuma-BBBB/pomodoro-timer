@@ -33,3 +33,4 @@ jobs:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           projectName: pomodoro-timer
           directory: ./dist
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
