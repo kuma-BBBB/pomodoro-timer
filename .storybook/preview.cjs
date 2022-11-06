@@ -1,4 +1,5 @@
 import '../src/index.css'
+import 'material-icons/iconfont/outlined.css'
 
 export const parameters = {
   actions: { argTypesRegex: '^on[A-Z].*' },
