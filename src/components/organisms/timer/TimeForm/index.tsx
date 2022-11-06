@@ -56,22 +56,21 @@ export const Presenter: FC<{
   )
 }
 
+export const schema = z
+  .object({
+    minutes: z.string().min(1, 'required'),
+    seconds: z.string().min(1, 'required'),
+  })
+  .refine(({ minutes, seconds }) => {
+    if (isNaN(Number(minutes)) || isNaN(Number(seconds))) {
+      return false
+    }
+    return true
+  })
 type Props = {
   setTime: (time: number) => void
 }
 export const TimeForm: FC<Props> = ({ setTime }) => {
-  const schema = z
-    .object({
-      minutes: z.string().min(1, 'required'),
-      seconds: z.string().min(1, 'required'),
-    })
-    .refine(({ minutes, seconds }) => {
-      if (isNaN(Number(minutes)) || isNaN(Number(seconds))) {
-        return false
-      }
-      return true
-    })
-
   const submitHandler: SubmitHandler<FormSchema> = ({ minutes, seconds }) => {
     let time = Number(seconds) * 1000
     time += Number(minutes) * 60 * 1000

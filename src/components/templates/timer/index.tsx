@@ -1,17 +1,21 @@
+import type { ComponentProps } from 'react'
+
 import { useState } from 'react'
 
 import { VStack } from '@/components/atoms'
 import { Timer, TimeForm } from '@/components/organisms'
 
-const Presenter = () => {
-  const [duration, setDuration] = useState(0)
-
-  const setTimeHandler = (time: number) => setDuration(time)
-
+export const Presenter = ({
+  setTime,
+  duration,
+}: {
+  setTime: ComponentProps<typeof TimeForm>['setTime']
+  duration: ComponentProps<typeof Timer>['duration']
+}) => {
   return (
     <div className="w-full h-screen flex justify-center items-center">
       <VStack>
-        <TimeForm setTime={setTimeHandler} />
+        <TimeForm setTime={setTime} />
         <Timer duration={duration} />
       </VStack>
     </div>
@@ -19,5 +23,8 @@ const Presenter = () => {
 }
 
 export const TimerTemplate = () => {
-  return <Presenter />
+  const [duration, setDuration] = useState(0)
+
+  const setTimeHandler = (time: number) => setDuration(time)
+  return <Presenter setTime={setTimeHandler} duration={duration} />
 }

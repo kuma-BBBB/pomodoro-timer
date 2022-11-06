@@ -12,7 +12,7 @@ export const Presenter: FC<{
   onStop: ComponentProps<typeof Button>['onClick']
 }> = ({ time, onStart, onStop }) => {
   return (
-    <VStack className="gap-4">
+    <VStack className="gap-4 items-center">
       <div className="rounded-full neumorphism w-64 h-64 flex justify-center items-center">
         <div className="rounded-full w-56 h-56 flex justify-center items-center bg-gradient-to-r from-amber-400 to-orange-500">
           <div className="rounded-full w-52 h-52 flex justify-center items-center bg-orange-50">
