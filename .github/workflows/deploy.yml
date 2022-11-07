@@ -41,4 +41,4 @@ jobs:
           projectName: pomodoro-timer
           directory: ./dist
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          gitHubToken: ${{ stes.generate_token.outputs.token }}
+          gitHubToken: ${{ steps.generate_token.outputs.token }}
