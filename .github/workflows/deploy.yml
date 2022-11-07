@@ -27,6 +27,13 @@ jobs:
       - name: build
         run: yarn build
 
+      - name: Generate github token
+        id: generate_token
+        uses: tibdex/github-app-token@v1
+        with:
+          app_id: ${{ secrets.GIT_HUB_APP_ID }}
+          private_key: ${{ secrets.GIT_HUB_PRIVATE_KEY }}
+
       - name: Publish to Cloudflare Pages
         uses: cloudflare/pages-action@1
         with:
@@ -34,3 +41,4 @@ jobs:
           projectName: pomodoro-timer
           directory: ./dist
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          gitHubToken: ${{ stes.generate_token.outputs.token }}
