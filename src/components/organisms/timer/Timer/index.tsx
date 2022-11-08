@@ -31,6 +31,12 @@ export const Presenter: FC<{
             pause_circle_filled
           </span>
         </IconButton>
+        <IconButton onClick={onStop}>
+          <span className="material-icons-outlined !text-4xl font-gradient">
+            {/* volume_up */}
+            volume_off
+          </span>
+        </IconButton>
       </HStack>
     </VStack>
   )
