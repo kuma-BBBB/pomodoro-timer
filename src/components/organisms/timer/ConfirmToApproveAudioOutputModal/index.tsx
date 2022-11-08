@@ -1,6 +1,11 @@
 import type { ComponentProps, FC } from 'react'
 
+import { useAtom } from 'jotai'
+
 import { BackDrop, Button, HStack, VStack } from '@/components/atoms'
+import { settingsAtom } from '@/store'
+
+import type { AudioSetting } from '@/store'
 
 export const Presenter = ({
   open,
@@ -60,17 +65,31 @@ export const ConfirmToApproveAudioOutputModal: FC<Props> = ({
   open,
   onClose,
 }) => {
+  const [settings, setSettings] = useAtom(settingsAtom)
+
   const confirmHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audio',
+      value: true,
+    }
+    const newSettings = [...settings, audioSetting]
+    setSettings(newSettings)
     onClose()
   }
-  const rejectmHandler = () => {
+  const rejectHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audio',
+      value: false,
+    }
+    const newSettings = [...settings, audioSetting]
+    setSettings(newSettings)
     onClose()
   }
   return (
     <Presenter
       open={open}
       onConfirm={confirmHandler}
-      onReject={rejectmHandler}
+      onReject={rejectHandler}
     />
   )
 }
