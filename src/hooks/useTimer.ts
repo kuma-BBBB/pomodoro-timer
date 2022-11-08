@@ -34,10 +34,12 @@ export const useTimer = (duration: number): Return => {
     }, 1000)
     setIntervalId(id)
 
+    const audio = new Audio('src/audio/alerm.mp3')
     const currentTimerId = setTimeout(() => {
       clearInterval(id)
       setTimerId(undefined)
       setIntervalId(undefined)
+      void audio.play()
     }, time + 1000)
 
     setTimerId(currentTimerId)
