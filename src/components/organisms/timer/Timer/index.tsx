@@ -41,8 +41,9 @@ type Props = {
 }
 export const Timer: FC<Props> = ({ duration }) => {
   const [isPaused, setIsPaused] = useState(false)
-  const { time, start, pause, unpause, format } = useTimer(duration)
+  const { time, start, pause, unpause, format, isEnded } = useTimer(duration)
   const startHandler = () => {
+    if (time < 1) return
     const startTime = dayjs()
     if (isPaused) {
       unpause(startTime)
@@ -53,10 +54,11 @@ export const Timer: FC<Props> = ({ duration }) => {
   }
 
   const stopHandler = () => {
-    if (!isPaused) {
-      pause()
+    if (isPaused) return
+    if (!isEnded) {
       setIsPaused(true)
     }
+    pause()
   }
 
   return (

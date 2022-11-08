@@ -1,4 +1,4 @@
-import { useEffect, useCallback, useState } from 'react'
+import { useEffect, useCallback, useState, useMemo } from 'react'
 
 import { getCurrentTime } from '@/utils'
 
@@ -10,12 +10,16 @@ type Return = {
   pause: () => void
   unpause: (startTime: Dayjs) => void
   format: (time: number) => string
+  isEnded: boolean
 }
 
 export const useTimer = (duration: number): Return => {
   const [time, setTime] = useState<number>(0)
   const [timerId, setTimerId] = useState<NodeJS.Timer>()
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>()
+  const [isEnded, setIsEnded] = useState<boolean>(false)
+  const audio = useMemo(() => new Audio('src/audio/alerm.mp3'), [])
+  audio.loop = true
 
   useEffect(() => {
     setTime(_getTime(duration))
@@ -28,54 +32,64 @@ export const useTimer = (duration: number): Return => {
     return Math.max(duration + startTime.diff(getCurrentTime()), 0)
   }
 
-  const _countTime = useCallback((startTime: Dayjs, time: number) => {
-    const id = setInterval(() => {
-      setTime(_getTime(time, startTime))
-    }, 1000)
-    setIntervalId(id)
+  const _countTime = useCallback(
+    (startTime: Dayjs, time: number) => {
+      setIsEnded(false)
+      audio.load()
 
-    const audio = new Audio('src/audio/alerm.mp3')
-    const currentTimerId = setTimeout(() => {
-      clearInterval(id)
-      setTimerId(undefined)
-      setIntervalId(undefined)
-      void audio.play()
-    }, time + 1000)
+      const id = setInterval(() => {
+        setTime(_getTime(time, startTime))
+      }, 1000)
+      setIntervalId(id)
 
-    setTimerId(currentTimerId)
-  }, [])
+      const currentTimerId = setTimeout(() => {
+        clearInterval(id)
+        setTimerId(undefined)
+        setIntervalId(undefined)
+        setIsEnded(true)
+        void audio.play()
+      }, time)
+
+      setTimerId(currentTimerId)
+    },
+    [audio]
+  )
 
   const start = useCallback(
     (startTime: Dayjs) => {
-      if (timerId === undefined && intervalId === undefined) {
-        _countTime(startTime, duration)
+      if (timerId !== undefined && intervalId !== undefined) return
+      if (time < 1) {
+        console.warn('required set time `> 0`')
+        return
       }
+      _countTime(startTime, duration)
     },
-    [duration, _countTime, timerId, intervalId]
+    [duration, _countTime, timerId, intervalId, time]
   )
 
   const unpause = useCallback(
     (startTime: Dayjs) => {
-      if (timerId === undefined && intervalId === undefined) {
-        _countTime(startTime, time)
+      if (timerId !== undefined && intervalId !== undefined) {
+        return
       }
+      _countTime(startTime, time)
     },
     [time, _countTime, timerId, intervalId]
   )
 
   const pause = useCallback(() => {
-    if (timerId !== undefined) {
+    if (timerId !== undefined || intervalId !== undefined) {
       clearInterval(intervalId)
       clearTimeout(timerId)
       setIntervalId(undefined)
       setTimerId(undefined)
-    } else {
-      if (time === 0) {
-        // タイマーのカウントが0の場合リセットする
-        setTime(duration)
-      }
     }
-  }, [timerId, intervalId, time, duration])
+    if (time === 0) {
+      // タイマーのカウントが0の場合リセットする
+      setTime(duration)
+      audio.pause()
+    }
+  }, [timerId, intervalId, time, duration, audio])
 
   const format = (number: number): string => {
     const second = Math.round(number / 1000)
@@ -86,5 +100,5 @@ export const useTimer = (duration: number): Return => {
     )
   }
 
-  return { time, start, pause, unpause, format }
+  return { time, start, pause, unpause, format, isEnded }
 }
