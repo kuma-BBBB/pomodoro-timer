@@ -10,8 +10,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
-      - name: Install dependencies
-        run: yarn
+      - name: Setup Node@16
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'yarn'
+
+      - name: install
+        run: yarn install --frozen-lockfile
 
         # 👇 Adds Chromatic as a step in the workflow
       - name: Publish Project 1 to Chromatic

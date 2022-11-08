@@ -1,16 +1,20 @@
 import type { FC, ComponentProps } from 'react'
 
+import { useAtom } from 'jotai'
 import { useState } from 'react'
 
 import { Button, HStack, IconButton, VStack } from '@/components/atoms'
-import { useTimer } from '@/hooks'
-import { dayjs } from '@/utils'
+import { useAudio, useTimer } from '@/hooks'
+import { audioSettingsAtom, AudioSetting } from '@/store'
+import { dayjs, deepCopy } from '@/utils'
 
 export const Presenter: FC<{
   time: string
+  muted: boolean
   onStart: ComponentProps<typeof Button>['onClick']
   onStop: ComponentProps<typeof Button>['onClick']
-}> = ({ time, onStart, onStop }) => {
+  onToggleMuted: ComponentProps<typeof Button>['onClick']
+}> = ({ time, muted, onStart, onStop, onToggleMuted }) => {
   return (
     <VStack className="gap-4 items-center">
       <div className="rounded-full neumorphism w-64 h-64 flex justify-center items-center">
@@ -31,6 +35,11 @@ export const Presenter: FC<{
             pause_circle_filled
           </span>
         </IconButton>
+        <IconButton onClick={onToggleMuted}>
+          <span className="material-icons-outlined !text-4xl font-gradient">
+            {muted ? 'volume_off' : 'volume_up'}
+          </span>
+        </IconButton>
       </HStack>
     </VStack>
   )
@@ -41,29 +50,54 @@ type Props = {
 }
 export const Timer: FC<Props> = ({ duration }) => {
   const [isPaused, setIsPaused] = useState(false)
-  const { time, start, pause, unpause, format } = useTimer(duration)
+  const [audioSetting, setAudioSetting] = useAtom(audioSettingsAtom)
+  const audioFilePath = 'src/audio/alerm.mp3'
+  const audio = useAudio(audioFilePath)
+  const timer = useTimer(duration)
+
   const startHandler = () => {
+    if (timer.time < 1) return
     const startTime = dayjs()
     if (isPaused) {
-      unpause(startTime)
       setIsPaused(false)
+      void timer.unpause(startTime).then(() => {
+        audio.start()
+      })
     } else {
-      start(startTime)
+      void timer.start(startTime).then(() => {
+        audio.start()
+      })
     }
   }
 
   const stopHandler = () => {
-    if (!isPaused) {
-      pause()
+    if (isPaused) return
+    timer.pause()
+    if (timer.isEnded) {
+      audio.pause()
+    } else {
       setIsPaused(true)
+    }
+  }
+
+  const toggleMutedHandler = () => {
+    const oldSetting = deepCopy(audioSetting)
+    if (oldSetting !== undefined) {
+      const setting: AudioSetting = {
+        type: 'audio',
+        value: !oldSetting?.value,
+      }
+      setAudioSetting(setting)
     }
   }
 
   return (
     <Presenter
-      time={format(time)}
+      time={timer.format(timer.time)}
+      muted={audio.audio.muted}
       onStart={startHandler}
       onStop={stopHandler}
+      onToggleMuted={toggleMutedHandler}
     />
   )
 }

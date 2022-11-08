@@ -5,10 +5,11 @@ import { getCurrentTime } from '@/utils'
 import type { Dayjs } from '@/utils'
 
 type Return = {
-  time: number
-  start: (startTime: Dayjs) => void
+  readonly time: number
+  readonly isEnded: boolean
+  start: (startTime: Dayjs) => Promise<void>
   pause: () => void
-  unpause: (startTime: Dayjs) => void
+  unpause: (startTime: Dayjs) => Promise<void>
   format: (time: number) => string
 }
 
@@ -16,6 +17,7 @@ export const useTimer = (duration: number): Return => {
   const [time, setTime] = useState<number>(0)
   const [timerId, setTimerId] = useState<NodeJS.Timer>()
   const [intervalId, setIntervalId] = useState<NodeJS.Timer>()
+  const [isEnded, setIsEnded] = useState<boolean>(false)
 
   useEffect(() => {
     setTime(_getTime(duration))
@@ -28,50 +30,61 @@ export const useTimer = (duration: number): Return => {
     return Math.max(duration + startTime.diff(getCurrentTime()), 0)
   }
 
-  const _countTime = useCallback((startTime: Dayjs, time: number) => {
-    const id = setInterval(() => {
-      setTime(_getTime(time, startTime))
-    }, 1000)
-    setIntervalId(id)
+  const _countTime = useCallback(
+    async (startTime: Dayjs, time: number) =>
+      await new Promise<void>((resolve) => {
+        setIsEnded(false)
 
-    const currentTimerId = setTimeout(() => {
-      clearInterval(id)
-      setTimerId(undefined)
-      setIntervalId(undefined)
-    }, time + 1000)
+        const id = setInterval(() => {
+          setTime(_getTime(time, startTime))
+        }, 1000)
+        setIntervalId(id)
 
-    setTimerId(currentTimerId)
-  }, [])
+        const currentTimerId = setTimeout(() => {
+          clearInterval(id)
+          setTimerId(undefined)
+          setIntervalId(undefined)
+          setIsEnded(true)
+          resolve()
+        }, time)
+
+        setTimerId(currentTimerId)
+      }),
+    []
+  )
 
   const start = useCallback(
-    (startTime: Dayjs) => {
-      if (timerId === undefined && intervalId === undefined) {
-        _countTime(startTime, duration)
+    async (startTime: Dayjs) => {
+      if (timerId !== undefined && intervalId !== undefined) return
+      if (time < 1) {
+        console.warn('required set time `> 0`')
+        return
       }
+      return await _countTime(startTime, duration)
     },
-    [duration, _countTime, timerId, intervalId]
+    [duration, _countTime, timerId, intervalId, time]
   )
 
   const unpause = useCallback(
-    (startTime: Dayjs) => {
-      if (timerId === undefined && intervalId === undefined) {
-        _countTime(startTime, time)
+    async (startTime: Dayjs) => {
+      if (timerId !== undefined && intervalId !== undefined) {
+        return
       }
+      return await _countTime(startTime, time)
     },
     [time, _countTime, timerId, intervalId]
   )
 
   const pause = useCallback(() => {
-    if (timerId !== undefined) {
+    if (timerId !== undefined || intervalId !== undefined) {
       clearInterval(intervalId)
       clearTimeout(timerId)
       setIntervalId(undefined)
       setTimerId(undefined)
-    } else {
-      if (time === 0) {
-        // タイマーのカウントが0の場合リセットする
-        setTime(duration)
-      }
+    }
+    if (time === 0) {
+      // タイマーのカウントが0の場合リセットする
+      setTime(duration)
     }
   }, [timerId, intervalId, time, duration])
 
@@ -84,5 +97,5 @@ export const useTimer = (duration: number): Return => {
     )
   }
 
-  return { time, start, pause, unpause, format }
+  return { time, start, pause, unpause, format, isEnded }
 }
