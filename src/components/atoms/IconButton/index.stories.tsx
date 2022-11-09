@@ -15,7 +15,7 @@ const Template: ComponentStory<typeof IconButton> = (args) => (
 export const Default = Template.bind({})
 Default.args = {
   children: (
-    <span className="material-icons-outlined !text-4xl font-gradient">
+    <span className="material-icons-outlined font-gradient !text-4xl">
       play_circle_filled
     </span>
   ),

@@ -17,26 +17,26 @@ export const Presenter: FC<{
 }> = ({ time, muted, onStart, onStop, onToggleMuted }) => {
   return (
     <VStack className="gap-4 items-center">
-      <div className="rounded-full neumorphism w-64 h-64 flex justify-center items-center">
+      <div className="neumorphism rounded-full w-64 h-64 flex justify-center items-center">
         <div className="rounded-full w-56 h-56 flex justify-center items-center bg-gradient-to-r from-amber-400 to-orange-500">
           <div className="rounded-full w-52 h-52 flex justify-center items-center bg-orange-50">
-            <h1 className="text-6xl font-gradient">{time}</h1>
+            <h1 className="font-gradient text-6xl">{time}</h1>
           </div>
         </div>
       </div>
       <HStack justifyContent="center" className="gap-4">
         <IconButton onClick={onStart}>
-          <span className="material-icons-outlined !text-4xl font-gradient">
+          <span className="material-icons-outlined font-gradient !text-4xl">
             play_circle_filled
           </span>
         </IconButton>
         <IconButton onClick={onStop}>
-          <span className="material-icons-outlined !text-4xl font-gradient">
+          <span className="material-icons-outlined font-gradient !text-4xl">
             pause_circle_filled
           </span>
         </IconButton>
         <IconButton onClick={onToggleMuted}>
-          <span className="material-icons-outlined !text-4xl font-gradient">
+          <span className="material-icons-outlined font-gradient !text-4xl">
             {muted ? 'volume_off' : 'volume_up'}
           </span>
         </IconButton>

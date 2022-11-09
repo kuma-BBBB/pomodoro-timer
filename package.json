@@ -8,6 +8,7 @@
   "version": "0.1.1",
   "type": "module",
   "scripts": {
+    "lint": "eslint .",
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
@@ -53,6 +54,7 @@
     "eslint-plugin-react": "^7.31.10",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-storybook": "^0.6.7",
+    "eslint-plugin-tailwindcss": "^3.6.2",
     "eslint-plugin-unused-imports": "^2.0.0",
     "material-icons": "^1.12.1",
     "postcss": "^8.4.18",
