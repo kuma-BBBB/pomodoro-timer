@@ -10,15 +10,13 @@
 
 @layer components {
   .btn {
-    @apply px-5 py-3 rounded-md;
+    @apply px-4 py-2 rounded-md;
   }
-
   .btn-primary {
-    @apply btn text-white bg-slate-700;
+    @apply btn bg-orange-500 text-white;
   }
-
-  .btn-outline {
-    @apply btn text-black bg-transparent outline outline-1;
+  .btn-secondary {
+    @apply btn bg-gray-400 text-white;
   }
 }
 

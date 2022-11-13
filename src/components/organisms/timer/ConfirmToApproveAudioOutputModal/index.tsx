@@ -18,7 +18,10 @@ export const Presenter = ({
 }) => {
   return (
     <BackDrop open={open}>
-      <div className="bg-white p-8 md:w-1/2 md:max-w-md max-md:w-11/12 rounded-md shadow-md">
+      <div
+        role="dialog"
+        className="bg-white p-8 md:w-1/2 md:max-w-md max-md:w-11/12 rounded-md shadow-md"
+      >
         <VStack className="gap-6 justify-center items-center">
           <span className="material-icons-outlined !text-4xl text-gray-400">
             volume_up
@@ -41,13 +44,17 @@ export const Presenter = ({
           <HStack className="gap-4 justify-center">
             <Button
               onClick={onConfirm}
-              className="px-4 py-2 bg-orange-500 text-white rounded-md w-1/3"
+              btnType="btn-primary"
+              className="w-1/3"
+              aria-label="OK"
             >
               OK
             </Button>
             <Button
               onClick={onReject}
-              className="px-4 py-2 bg-gray-400 text-white rounded-md w-1/3"
+              btnType="btn-secondary"
+              className="w-1/3"
+              aria-label="No"
             >
               No
             </Button>

@@ -24,6 +24,7 @@ module.exports = {
   },
   features: {
     storyStoreV7: true,
+    interactionsDebugger: true,
   },
   viteFinal: (config) => {
     config.plugins = [...config.plugins]

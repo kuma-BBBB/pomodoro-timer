@@ -28,6 +28,7 @@ export const Presenter: FC<{
         className="gap-2 mb-4 py-4 border rounded-md"
       >
         <input
+          aria-label="minutes"
           type="number"
           className="w-12 text-center text-base text-gray-500"
           max={99}
@@ -37,6 +38,7 @@ export const Presenter: FC<{
         />
         <p className="font-bold text-gray-500">分</p>
         <input
+          aria-label="seconds"
           type="number"
           className="w-12 text-center text-base text-gray-500"
           max={59}
@@ -45,10 +47,7 @@ export const Presenter: FC<{
           {...register('seconds')}
         />
         <p className="font-bold text-gray-500">秒</p>
-        <Button
-          type="submit"
-          className="px-4 py-1 bg-orange-500 text-white rounded-md"
-        >
+        <Button type="submit" btnType="btn-primary">
           SET
         </Button>
       </HStack>
@@ -62,9 +61,16 @@ export const schema = z
     seconds: z.string().min(1, 'required'),
   })
   .refine(({ minutes, seconds }) => {
-    if (isNaN(Number(minutes)) || isNaN(Number(seconds))) {
+    const minutesNum = Number(minutes)
+    const secondsNum = Number(seconds)
+    if (isNaN(minutesNum) || isNaN(secondsNum)) {
       return false
     }
+
+    if (secondsNum > 59) {
+      return false
+    }
+
     return true
   })
 type Props = {

@@ -11,16 +11,16 @@ type Props = {
   children: ReactNode
   onClick?: MouseEventHandler<HTMLButtonElement>
   type?: ButtonHTMLAttributes<HTMLButtonElement>['type']
-  btnType?: 'btn-primary' | 'btn-outline'
+  btnType?: 'btn-primary' | 'btn-secondary'
   className?: string
+  'aria-label'?: string
 }
 
 export const Button: FC<Props> = ({
   children,
-  onClick,
   btnType,
-  type = 'button',
-  className = '',
+  className,
+  ...rest
 }) => {
   const classNames = [className]
   if (btnType !== undefined) {
@@ -28,7 +28,7 @@ export const Button: FC<Props> = ({
   }
 
   return (
-    <button type={type} className={clsx(classNames)} onClick={onClick}>
+    <button className={clsx(classNames)} {...rest}>
       {children}
     </button>
   )

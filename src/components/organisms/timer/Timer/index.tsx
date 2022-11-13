@@ -25,17 +25,20 @@ export const Presenter: FC<{
         </div>
       </div>
       <HStack justifyContent="center" className="gap-4">
-        <IconButton onClick={onStart}>
+        <IconButton onClick={onStart} aria-label="play">
           <span className="material-icons-outlined font-gradient !text-4xl">
             play_circle_filled
           </span>
         </IconButton>
-        <IconButton onClick={onStop}>
+        <IconButton onClick={onStop} aria-label="pause">
           <span className="material-icons-outlined font-gradient !text-4xl">
             pause_circle_filled
           </span>
         </IconButton>
-        <IconButton onClick={onToggleMuted}>
+        <IconButton
+          onClick={onToggleMuted}
+          aria-label={muted ? 'mute' : 'unmute'}
+        >
           <span className="material-icons-outlined font-gradient !text-4xl">
             {muted ? 'volume_off' : 'volume_up'}
           </span>

@@ -11,6 +11,7 @@ export const BackDrop: FC<Props> = ({ children, open }) => {
   return (
     <>
       <div
+        role="none"
         className={clsx([
           open ? '' : 'hidden',
           'fixed top-0 left-0 w-full h-full opacity-50 bg-white',
