@@ -2,7 +2,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { jest, expect } from '@storybook/jest'
 import { within, userEvent, waitFor } from '@storybook/testing-library'
 
-import { Presenter, schema } from './'
+import { Presenter, schema } from '.'
 
 import type { ComponentMeta, ComponentStory } from '@storybook/react'
 

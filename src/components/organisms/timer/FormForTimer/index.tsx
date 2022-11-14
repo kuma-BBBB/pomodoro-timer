@@ -76,7 +76,7 @@ export const schema = z
 type Props = {
   setTime: (time: number) => void
 }
-export const TimeForm: FC<Props> = ({ setTime }) => {
+export const FormForTimer: FC<Props> = ({ setTime }) => {
   const submitHandler: SubmitHandler<FormSchema> = ({ minutes, seconds }) => {
     let time = Number(seconds) * 1000
     time += Number(minutes) * 60 * 1000

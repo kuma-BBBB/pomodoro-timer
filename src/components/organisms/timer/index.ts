@@ -1,3 +1,3 @@
 export { ConfirmToApproveAudioOutputModal } from './ConfirmToApproveAudioOutputModal'
-export { TimeForm } from './TimeForm'
+export { FormForTimer } from './FormForTimer'
 export { Timer } from './Timer'
