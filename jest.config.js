@@ -27,5 +27,5 @@ export default {
   ],
   testPathIgnorePatterns: ['<rootDir>/node_modules/'],
   testMatch: ['**/*.spec.tsx'],
-  setupFiles: ['./jest.setup.js'],
+  setupFilesAfterEnv: ['./jest.setup.js'],
 }
