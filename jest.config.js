@@ -5,6 +5,11 @@ export default {
   coverageDirectory: '.coverage',
   coverageProvider: 'v8',
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
+  moduleNameMapper: {
+    '^@/components/atoms$': '<rootDir>/src/components/atoms',
+    '^@/store$': '<rootDir>/src/store',
+    '^@/utils$': '<rootDir>/src/utils',
+  },
   testEnvironment: 'jsdom',
   transform: {
     '^.+\\.(t|j)sx?$': [
