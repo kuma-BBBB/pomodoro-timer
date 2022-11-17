@@ -8,6 +8,9 @@ type Props = {
 }
 
 export const BackDrop: FC<Props> = ({ children, open }) => {
+  if (!open) {
+    return <></>
+  }
   return (
     <>
       <div

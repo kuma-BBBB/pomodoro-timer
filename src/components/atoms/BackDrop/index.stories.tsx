@@ -1,19 +1,14 @@
-import { expect } from '@storybook/jest'
-import { within } from '@storybook/testing-library'
-
 import { BackDrop } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
+
+type Story = ComponentStoryObj<typeof BackDrop>
 
 const meta: ComponentMeta<typeof BackDrop> = {
   title: 'atoms/BackDrop',
   component: BackDrop,
 }
 export default meta
-
-const Template: ComponentStory<typeof BackDrop> = (args) => (
-  <BackDrop {...args} />
-)
 
 const Children = () => (
   <div
@@ -24,24 +19,18 @@ const Children = () => (
   </div>
 )
 
-export const Visible = Template.bind({})
-Visible.args = {
-  open: true,
-  children: <Children />,
-}
-Visible.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  expect(await canvas.findByRole('none')).toBeVisible()
-  expect(await canvas.findByRole('dialog')).toBeVisible()
+export const Visible: Story = {
+  name: '表示されている時',
+  args: {
+    open: true,
+    children: <Children />,
+  },
 }
 
-export const Invisible = Template.bind({})
-Invisible.args = {
-  open: false,
-  children: <Children />,
-}
-Invisible.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  expect(await canvas.queryByRole('none')).toBeNull()
-  expect(await canvas.queryByRole('dialog')).toBeNull()
+export const Invisible: Story = {
+  name: '表示されていない時',
+  args: {
+    open: false,
+    children: <Children />,
+  },
 }

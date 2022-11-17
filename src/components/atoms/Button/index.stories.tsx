@@ -1,9 +1,8 @@
-import { expect, jest } from '@storybook/jest'
-import { userEvent, waitFor, within } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/testing-library'
 
 import { Button } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
 const meta: ComponentMeta<typeof Button> = {
   title: 'atoms/Button',
@@ -11,46 +10,42 @@ const meta: ComponentMeta<typeof Button> = {
 }
 export default meta
 
-const Template: ComponentStory<typeof Button> = (args) => <Button {...args} />
+type Story = ComponentStoryObj<typeof Button>
 
-const mockFnForDefault = jest.fn(() => console.log('default'))
-export const Default = Template.bind({})
-Default.args = {
-  children: 'default',
-  onClick: mockFnForDefault,
+export const Default: Story = {
+  name: 'スタイルなしのボタン',
+  args: {
+    children: 'default',
+    onClick: () => console.debug('click'),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    userEvent.click(canvas.getByRole('button'))
+  },
 }
-Default.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  userEvent.click(canvas.getByRole('button'))
-  expect(await canvas.findByText('default')).toBeVisible()
-  await waitFor(() => expect(mockFnForDefault).toBeCalled())
-  mockFnForDefault.mockReset()
+
+export const Primary: Story = {
+  name: 'Primaryスタイルのボタン',
+  args: {
+    children: 'primary',
+    btnType: 'btn-primary',
+    onClick: () => console.debug('click'),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    userEvent.click(canvas.getByRole('button'))
+  },
 }
-const mockFnForPrimary = jest.fn(() => console.log('primary'))
-export const Primary = Template.bind({})
-Primary.args = {
-  children: 'primary',
-  onClick: mockFnForPrimary,
-  btnType: 'btn-primary',
-}
-Primary.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  userEvent.click(canvas.getByRole('button'))
-  expect(await canvas.findByText('primary')).toBeVisible()
-  await waitFor(() => expect(mockFnForPrimary).toBeCalled())
-  mockFnForPrimary.mockReset()
-}
-const mockFnForSecondary = jest.fn(() => console.log('secondary'))
-export const Secondary = Template.bind({})
-Secondary.args = {
-  children: 'secondary',
-  onClick: mockFnForSecondary,
-  btnType: 'btn-secondary',
-}
-Secondary.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  userEvent.click(canvas.getByRole('button'))
-  expect(await canvas.findByText('secondary')).toBeVisible()
-  await waitFor(() => expect(mockFnForSecondary).toBeCalled())
-  mockFnForSecondary.mockReset()
+
+export const Secondary: Story = {
+  name: 'Secondaryスタイルのボタン',
+  args: {
+    children: 'secondary',
+    btnType: 'btn-secondary',
+    onClick: () => console.debug('click'),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    userEvent.click(canvas.getByRole('button'))
+  },
 }

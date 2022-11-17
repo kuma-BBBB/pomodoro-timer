@@ -1,9 +1,6 @@
-import { expect } from '@storybook/jest'
-import { within } from '@storybook/testing-library'
-
 import { HStack } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
 const meta: ComponentMeta<typeof HStack> = {
   title: 'atoms/HStack',
@@ -11,7 +8,7 @@ const meta: ComponentMeta<typeof HStack> = {
 }
 export default meta
 
-const Template: ComponentStory<typeof HStack> = (args) => <HStack {...args} />
+type Story = ComponentStoryObj<typeof HStack>
 
 const MockItem = () => (
   <div data-testid="mock-item" className="w-2/12 py-2 bg-gray-400">
@@ -20,87 +17,72 @@ const MockItem = () => (
 )
 const mockClassName = 'p-2 border-2 border-orange-400 rounded-md'
 
-export const FlexStart = Template.bind({})
-FlexStart.args = {
-  className: mockClassName,
-  justifyContent: 'start',
-  children: (
-    <>
-      <MockItem />
-      <MockItem />
-    </>
-  ),
-}
-FlexStart.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const elements = await canvas.queryAllByTestId('mock-item')
-  expect(elements).not.toBeNull()
+export const FlexStart: Story = {
+  name: '左寄せ表示の場合',
+  args: {
+    className: mockClassName,
+    justifyContent: 'start',
+    children: (
+      <>
+        <MockItem />
+        <MockItem />
+      </>
+    ),
+  },
 }
 
-export const FlexEnd = Template.bind({})
-FlexEnd.args = {
-  className: mockClassName,
-  justifyContent: 'end',
-  children: (
-    <>
-      <MockItem />
-      <MockItem />
-    </>
-  ),
-}
-FlexEnd.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const elements = await canvas.queryAllByTestId('mock-item')
-  expect(elements).not.toBeNull()
+export const FlexEnd: Story = {
+  name: '右寄せ表示の場合',
+  args: {
+    className: mockClassName,
+    justifyContent: 'end',
+    children: (
+      <>
+        <MockItem />
+        <MockItem />
+      </>
+    ),
+  },
 }
 
-export const Center = Template.bind({})
-Center.args = {
-  className: mockClassName,
-  justifyContent: 'center',
-  children: (
-    <>
-      <MockItem />
-      <MockItem />
-    </>
-  ),
-}
-Center.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const elements = await canvas.queryAllByTestId('mock-item')
-  expect(elements).not.toBeNull()
+export const Center: Story = {
+  name: '中央表示の場合',
+  args: {
+    className: mockClassName,
+    justifyContent: 'center',
+    children: (
+      <>
+        <MockItem />
+        <MockItem />
+      </>
+    ),
+  },
 }
 
-export const Between = Template.bind({})
-Between.args = {
-  className: mockClassName,
-  justifyContent: 'between',
-  children: (
-    <>
-      <MockItem />
-      <MockItem />
-    </>
-  ),
-}
-Between.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const elements = await canvas.queryAllByTestId('mock-item')
-  expect(elements).not.toBeNull()
+export const Between: Story = {
+  name: '両端寄せの場合',
+  args: {
+    className: mockClassName,
+    justifyContent: 'between',
+    children: (
+      <>
+        <MockItem />
+        <MockItem />
+      </>
+    ),
+  },
 }
 
-export const Around = Template.bind({})
-Around.args = {
-  className: mockClassName,
-  justifyContent: 'around',
-  children: (
-    <>
-      <MockItem />
-      <MockItem />
-    </>
-  ),
-}
-Around.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  const elements = await canvas.queryAllByTestId('mock-item')
-  expect(elements).not.toBeNull()
+export const Around: Story = {
+  name: 'around表示',
+  args: {
+    className: mockClassName,
+    justifyContent: 'around',
+    children: (
+      <>
+        <MockItem />
+        <MockItem />
+      </>
+    ),
+  },
 }
