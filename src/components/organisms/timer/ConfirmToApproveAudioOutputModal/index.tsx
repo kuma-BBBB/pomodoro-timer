@@ -1,21 +1,38 @@
 import type { ComponentProps, FC } from 'react'
 
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
 import { BackDrop, Button, HStack, VStack } from '@/components/atoms'
-import { settingsAtom } from '@/store'
+import { audioSettingsAtom } from '@/store'
 
 import type { AudioSetting } from '@/store'
 
-export const Presenter = ({
-  open,
-  onConfirm,
-  onReject,
-}: {
+type Props = {
   open: ComponentProps<typeof BackDrop>['open']
-  onConfirm: () => void
-  onReject: () => void
+  onClose: () => void
+}
+export const ConfirmToApproveAudioOutputModal: FC<Props> = ({
+  open,
+  onClose,
 }) => {
+  const setAudioSetting = useSetAtom(audioSettingsAtom)
+
+  const confirmHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audioSetting',
+      value: true,
+    }
+    setAudioSetting(audioSetting)
+    onClose()
+  }
+  const rejectHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audioSetting',
+      value: false,
+    }
+    setAudioSetting(audioSetting)
+    onClose()
+  }
   return (
     <BackDrop open={open}>
       <div
@@ -43,7 +60,7 @@ export const Presenter = ({
           </p>
           <HStack className="gap-4 justify-center">
             <Button
-              onClick={onConfirm}
+              onClick={confirmHandler}
               btnType="btn-primary"
               className="w-1/3"
               aria-label="OK"
@@ -51,7 +68,7 @@ export const Presenter = ({
               OK
             </Button>
             <Button
-              onClick={onReject}
+              onClick={rejectHandler}
               btnType="btn-secondary"
               className="w-1/3"
               aria-label="No"
@@ -62,42 +79,5 @@ export const Presenter = ({
         </VStack>
       </div>
     </BackDrop>
-  )
-}
-
-type Props = {
-  open: ComponentProps<typeof Presenter>['open']
-  onClose: () => void
-}
-export const ConfirmToApproveAudioOutputModal: FC<Props> = ({
-  open,
-  onClose,
-}) => {
-  const [settings, setSettings] = useAtom(settingsAtom)
-
-  const confirmHandler = () => {
-    const audioSetting: AudioSetting = {
-      type: 'audio',
-      value: true,
-    }
-    const newSettings = [...settings, audioSetting]
-    setSettings(newSettings)
-    onClose()
-  }
-  const rejectHandler = () => {
-    const audioSetting: AudioSetting = {
-      type: 'audio',
-      value: false,
-    }
-    const newSettings = [...settings, audioSetting]
-    setSettings(newSettings)
-    onClose()
-  }
-  return (
-    <Presenter
-      open={open}
-      onConfirm={confirmHandler}
-      onReject={rejectHandler}
-    />
   )
 }

@@ -1,5 +1,5 @@
 import type { FC } from 'react'
-import type { SubmitHandler, Resolver } from 'react-hook-form'
+import type { SubmitHandler } from 'react-hook-form'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -12,16 +12,40 @@ type FormSchema = {
   seconds: string
 }
 
-export const Presenter: FC<{
-  onSubmit: SubmitHandler<FormSchema>
-  resolver: Resolver<FormSchema>
-}> = ({ onSubmit, resolver }) => {
-  const { handleSubmit, register } = useForm<FormSchema>({
-    resolver,
+export const schema = z
+  .object({
+    minutes: z.string().min(1, 'required'),
+    seconds: z.string().min(1, 'required'),
   })
+  .refine(({ minutes, seconds }) => {
+    const minutesNum = Number(minutes)
+    const secondsNum = Number(seconds)
+    if (isNaN(minutesNum) || isNaN(secondsNum)) {
+      return false
+    }
+
+    if (secondsNum > 59) {
+      return false
+    }
+
+    return true
+  })
+type Props = {
+  setTime: (time: number) => void
+}
+export const FormForTimer: FC<Props> = ({ setTime }) => {
+  const { handleSubmit, register } = useForm<FormSchema>({
+    resolver: zodResolver(schema),
+  })
+  const submitHandler: SubmitHandler<FormSchema> = ({ minutes, seconds }) => {
+    let time = Number(seconds) * 1000
+    time += Number(minutes) * 60 * 1000
+    setTime(time)
+  }
+
   return (
     // eslint-disable-next-line @typescript-eslint/no-misused-promises
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(submitHandler)}>
       <HStack
         justifyContent="center"
         alignItems="center"
@@ -47,41 +71,10 @@ export const Presenter: FC<{
           {...register('seconds')}
         />
         <p className="font-bold text-gray-500">秒</p>
-        <Button type="submit" btnType="btn-primary">
+        <Button type="submit" btnType="btn-primary" aria-label="setTimer">
           SET
         </Button>
       </HStack>
     </form>
   )
-}
-
-export const schema = z
-  .object({
-    minutes: z.string().min(1, 'required'),
-    seconds: z.string().min(1, 'required'),
-  })
-  .refine(({ minutes, seconds }) => {
-    const minutesNum = Number(minutes)
-    const secondsNum = Number(seconds)
-    if (isNaN(minutesNum) || isNaN(secondsNum)) {
-      return false
-    }
-
-    if (secondsNum > 59) {
-      return false
-    }
-
-    return true
-  })
-type Props = {
-  setTime: (time: number) => void
-}
-export const FormForTimer: FC<Props> = ({ setTime }) => {
-  const submitHandler: SubmitHandler<FormSchema> = ({ minutes, seconds }) => {
-    let time = Number(seconds) * 1000
-    time += Number(minutes) * 60 * 1000
-    setTime(time)
-  }
-
-  return <Presenter onSubmit={submitHandler} resolver={zodResolver(schema)} />
 }
