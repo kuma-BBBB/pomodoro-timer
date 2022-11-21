@@ -1,6 +1,6 @@
 import { Container } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
 const meta: ComponentMeta<typeof Container> = {
   title: 'atoms/Container',
@@ -8,11 +8,17 @@ const meta: ComponentMeta<typeof Container> = {
 }
 export default meta
 
-const Template: ComponentStory<typeof Container> = (args) => (
-  <Container {...args} />
+type Story = ComponentStoryObj<typeof Container>
+
+const MockItem = () => (
+  <div data-testid="mock-item" className="w-2/12 py-2 bg-gray-400">
+    <p className="text-center">item</p>
+  </div>
 )
 
-export const Default = Template.bind({})
-Default.args = {
-  children: <h1>Container</h1>,
+export const Default: Story = {
+  name: 'components/atoms/Container',
+  args: {
+    children: <MockItem />,
+  },
 }

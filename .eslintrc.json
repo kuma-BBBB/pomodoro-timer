@@ -13,6 +13,7 @@
     "plugin:import/errors",
     "plugin:import/warnings",
     "plugin:import/typescript",
+    "plugin:tailwindcss/recommended",
     "prettier"
   ],
   "parser": "@typescript-eslint/parser",
@@ -29,7 +30,8 @@
     "react-hooks",
     "@typescript-eslint",
     "import",
-    "unused-imports"
+    "unused-imports",
+    "tailwindcss"
   ],
   "rules": {
     "react/prop-types": "off",
@@ -75,6 +77,9 @@
     },
     "import/resolver": {
       "typescript": {}
+    },
+    "tailwindcss": {
+      "whitelist": ["material-icons.*"]
     }
   }
 }

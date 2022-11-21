@@ -1,30 +1,51 @@
 import type { ComponentProps, FC } from 'react'
 
-import { useAtom } from 'jotai'
+import { useSetAtom } from 'jotai'
 
 import { BackDrop, Button, HStack, VStack } from '@/components/atoms'
-import { settingsAtom } from '@/store'
+import { audioSettingsAtom } from '@/store'
 
 import type { AudioSetting } from '@/store'
 
-export const Presenter = ({
-  open,
-  onConfirm,
-  onReject,
-}: {
+type Props = {
   open: ComponentProps<typeof BackDrop>['open']
-  onConfirm: () => void
-  onReject: () => void
+  onClose: () => void
+}
+export const ConfirmToApproveAudioOutputModal: FC<Props> = ({
+  open,
+  onClose,
 }) => {
+  const setAudioSetting = useSetAtom(audioSettingsAtom)
+
+  const confirmHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audioSetting',
+      value: true,
+    }
+    setAudioSetting(audioSetting)
+    onClose()
+  }
+  const rejectHandler = () => {
+    const audioSetting: AudioSetting = {
+      type: 'audioSetting',
+      value: false,
+    }
+    setAudioSetting(audioSetting)
+    onClose()
+  }
   return (
     <BackDrop open={open}>
-      <div className="bg-white p-8 w-1/3 min-w-600 max-w-800 rounded-md shadow-md">
+      <div
+        role="dialog"
+        className="bg-white p-8 md:w-1/2 md:max-w-md max-md:w-11/12 rounded-md shadow-md"
+      >
         <VStack className="gap-6 justify-center items-center">
           <span className="material-icons-outlined !text-4xl text-gray-400">
             volume_up
           </span>
           <p className="text-gray-400">
-            当サイトでは、一部機能にてオーディオが出力されます。出力を希望されない方は、Noを選択してください。
+            当サイトでは、一部機能にてオーディオが出力されます。出力を希望されない方は、
+            <strong>No</strong>を選択してください。
             <br />
             ※&nbsp;<strong>No</strong>
             を選択した場合でも、
@@ -39,14 +60,18 @@ export const Presenter = ({
           </p>
           <HStack className="gap-4 justify-center">
             <Button
-              onClick={onConfirm}
-              className="px-4 py-2 bg-orange-500 text-white rounded-md w-1/3"
+              onClick={confirmHandler}
+              btnType="btn-primary"
+              className="w-1/3"
+              aria-label="OK"
             >
               OK
             </Button>
             <Button
-              onClick={onReject}
-              className="px-4 py-2 bg-gray-400 text-white rounded-md w-1/3"
+              onClick={rejectHandler}
+              btnType="btn-secondary"
+              className="w-1/3"
+              aria-label="No"
             >
               No
             </Button>
@@ -54,42 +79,5 @@ export const Presenter = ({
         </VStack>
       </div>
     </BackDrop>
-  )
-}
-
-type Props = {
-  open: ComponentProps<typeof Presenter>['open']
-  onClose: () => void
-}
-export const ConfirmToApproveAudioOutputModal: FC<Props> = ({
-  open,
-  onClose,
-}) => {
-  const [settings, setSettings] = useAtom(settingsAtom)
-
-  const confirmHandler = () => {
-    const audioSetting: AudioSetting = {
-      type: 'audio',
-      value: true,
-    }
-    const newSettings = [...settings, audioSetting]
-    setSettings(newSettings)
-    onClose()
-  }
-  const rejectHandler = () => {
-    const audioSetting: AudioSetting = {
-      type: 'audio',
-      value: false,
-    }
-    const newSettings = [...settings, audioSetting]
-    setSettings(newSettings)
-    onClose()
-  }
-  return (
-    <Presenter
-      open={open}
-      onConfirm={confirmHandler}
-      onReject={rejectHandler}
-    />
   )
 }
