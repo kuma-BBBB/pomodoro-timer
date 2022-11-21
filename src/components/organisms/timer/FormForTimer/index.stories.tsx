@@ -1,57 +1,68 @@
-import { zodResolver } from '@hookform/resolvers/zod'
-import { jest, expect } from '@storybook/jest'
-import { within, userEvent, waitFor } from '@storybook/testing-library'
+import { within, userEvent } from '@storybook/testing-library'
 
-import { Presenter, schema } from '.'
+import { FormForTimer } from '.'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
-const meta: ComponentMeta<typeof Presenter> = {
-  title: 'organisms/TimeForm',
-  component: Presenter,
+const meta: ComponentMeta<typeof FormForTimer> = {
+  title: 'organisms/FormForTimer',
+  component: FormForTimer,
 }
 export default meta
 
-const Template: ComponentStory<typeof Presenter> = (args) => (
-  <Presenter {...args} />
-)
+type Story = ComponentStoryObj<typeof FormForTimer>
 
-const mockFnForEmptyForm = jest.fn()
-export const EmptyForm = Template.bind({})
-EmptyForm.args = {
-  onSubmit: mockFnForEmptyForm,
-  resolver: zodResolver(schema),
-}
-EmptyForm.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-  userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
-  userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
-  userEvent.click(canvas.getByRole('button'))
-
-  await waitFor(() => expect(mockFnForEmptyForm).not.toBeCalled())
-  mockFnForEmptyForm.mockReset()
+export const EmptyForm: Story = {
+  name: 'フォーム未入力の場合',
+  args: {
+    setTime: (num: number) => console.debug(num),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
+    userEvent.click(canvas.getByRole('button'))
+  },
 }
 
-const mockFnForFilledForm = jest.fn()
-export const FilledForm = Template.bind({})
-FilledForm.args = {
-  onSubmit: mockFnForFilledForm,
-  resolver: zodResolver(schema),
+export const FillAll: Story = {
+  name: '全項目入力の場合',
+  args: {
+    setTime: (num: number) => console.debug(num),
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
+    userEvent.type(canvas.getByRole('spinbutton', { name: 'seconds' }), '59')
+    userEvent.type(canvas.getByRole('spinbutton', { name: 'minutes' }), '3')
+    userEvent.click(canvas.getByRole('button'))
+  },
 }
-FilledForm.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
 
-  userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
-  userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
-  userEvent.type(canvas.getByRole('spinbutton', { name: 'seconds' }), '59')
-  userEvent.type(canvas.getByRole('spinbutton', { name: 'minutes' }), '3')
-  userEvent.click(canvas.getByRole('button'))
+export const SecondsError: Story = {
+  name: '「秒」項目の不正値の場合',
+  args: {
+    setTime: (num: number) => console.debug(num),
+  },
+  play: async (ctx) => {
+    await FillAll.play?.(ctx)
+    const canvas = within(ctx.canvasElement)
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
+    userEvent.click(canvas.getByRole('button'))
+  },
+}
 
-  const minutes = await canvas.findByDisplayValue('3')
-  await expect(minutes).toBeVisible()
-  const seconds = await canvas.findByDisplayValue('59')
-  await expect(seconds).toBeVisible()
-
-  await waitFor(() => expect(mockFnForFilledForm).toBeCalled())
-  mockFnForFilledForm.mockReset()
+export const MinutesError: Story = {
+  name: '「分」項目の不正値の場合',
+  args: {
+    setTime: (num: number) => console.debug(num),
+  },
+  play: async (ctx) => {
+    await FillAll.play?.(ctx)
+    const canvas = within(ctx.canvasElement)
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
+    userEvent.click(canvas.getByRole('button'))
+  },
 }

@@ -1,21 +1,15 @@
-import { Presenter } from './'
+import { TimerTemplate } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
-const meta: ComponentMeta<typeof Presenter> = {
+const meta: ComponentMeta<typeof TimerTemplate> = {
   title: 'template/timer',
-  component: Presenter,
+  component: TimerTemplate,
 }
 export default meta
 
-const Template: ComponentStory<typeof Presenter> = (args) => (
-  <Presenter {...args} />
-)
+type Story = ComponentStoryObj<typeof TimerTemplate>
 
-export const Default = Template.bind({})
-Default.args = {
-  duration: 5000,
-  setTime: (_) => {
-    console.log('set time')
-  },
+export const Default: Story = {
+  name: '通常時',
 }

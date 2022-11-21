@@ -7,6 +7,7 @@ export default {
   moduleFileExtensions: ['js', 'jsx', 'ts', 'tsx'],
   moduleNameMapper: {
     '^@/components/atoms$': '<rootDir>/src/components/atoms',
+    '^@/hooks$': '<rootDir>/src/hooks',
     '^@/store$': '<rootDir>/src/store',
     '^@/utils$': '<rootDir>/src/utils',
   },

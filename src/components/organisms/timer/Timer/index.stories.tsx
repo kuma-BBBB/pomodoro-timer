@@ -1,62 +1,50 @@
-import { expect, jest } from '@storybook/jest'
-import { userEvent, within, waitFor } from '@storybook/testing-library'
+import { userEvent, within } from '@storybook/testing-library'
 
-import { Presenter } from './'
+import { Timer } from './'
 
-import type { ComponentMeta, ComponentStory } from '@storybook/react'
+import type { ComponentMeta, ComponentStoryObj } from '@storybook/react'
 
-const meta: ComponentMeta<typeof Presenter> = {
+const meta: ComponentMeta<typeof Timer> = {
   title: 'organisms/Timer',
-  component: Presenter,
+  component: Timer,
 }
 export default meta
 
-const Template: ComponentStory<typeof Presenter> = (args) => (
-  <Presenter {...args} />
-)
+type Story = ComponentStoryObj<typeof Timer>
 
-const mockFnForMutedTimer = jest.fn(() => console.debug('click'))
-export const MutedTimer = Template.bind({})
-MutedTimer.args = {
-  time: '00:00',
-  muted: true,
-  onStart: mockFnForMutedTimer,
-  onStop: mockFnForMutedTimer,
-  onToggleMuted: mockFnForMutedTimer,
-}
-MutedTimer.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
-
-  const timerDisplay = await canvas.findByText('00:00')
-  expect(timerDisplay).toBeVisible()
-
-  userEvent.click(canvas.getByRole('button', { name: 'play' }))
-  userEvent.click(canvas.getByRole('button', { name: 'pause' }))
-  userEvent.click(canvas.getByRole('button', { name: 'mute' }))
-
-  await waitFor(() => expect(mockFnForMutedTimer).toBeCalledTimes(3))
-  mockFnForMutedTimer.mockReset()
+export const MutedToggle: Story = {
+  name: 'ミュートの切り替えをする',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const isMuted = canvas.queryByRole('button', { name: 'unmute' }) !== null
+    if (isMuted) {
+      userEvent.click(canvas.getByRole('button', { name: 'unmute' }))
+    } else {
+      userEvent.click(canvas.getByRole('button', { name: 'mute' }))
+    }
+  },
 }
 
-const mockFnForUnmutedTimer = jest.fn(() => console.debug('click'))
-export const UnmutedTimer = Template.bind({})
-UnmutedTimer.args = {
-  time: '00:00',
-  muted: false,
-  onStart: mockFnForUnmutedTimer,
-  onStop: mockFnForUnmutedTimer,
-  onToggleMuted: mockFnForUnmutedTimer,
+export const SetTime: Story = {
+  name: 'タイマーの時間をセットする',
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'seconds' }))
+    userEvent.clear(canvas.getByRole('spinbutton', { name: 'minutes' }))
+    userEvent.type(canvas.getByRole('spinbutton', { name: 'seconds' }), '59')
+    userEvent.type(canvas.getByRole('spinbutton', { name: 'minutes' }), '3')
+    userEvent.click(canvas.getByRole('button', { name: 'setTimer' }))
+  },
 }
-UnmutedTimer.play = async ({ canvasElement }) => {
-  const canvas = within(canvasElement)
 
-  const timerDisplay = await canvas.findByText('00:00')
-  expect(timerDisplay).toBeVisible()
-
-  userEvent.click(canvas.getByRole('button', { name: 'play' }))
-  userEvent.click(canvas.getByRole('button', { name: 'pause' }))
-  userEvent.click(canvas.getByRole('button', { name: 'unmute' }))
-
-  await waitFor(() => expect(mockFnForUnmutedTimer).toBeCalledTimes(3))
-  mockFnForUnmutedTimer.mockReset()
-}
+// TODO: 発火後、非同期的に再レンダリングされるコンポーネントの検知
+// export const PauseTimer: Story = {
+//   name: 'タイマーをスタートし途中で止める(3:59 - 3:56)',
+//   play: async (ctx) => {
+//     await SetTime.play?.(ctx)
+//     const canvas = within(ctx.canvasElement)
+//     userEvent.click(canvas.getByRole('button', { name: 'play' }))
+//     await sleep(3000)
+// userEvent.click(canvas.getByRole('button', { name: 'pause' }))
+//   },
+// }
