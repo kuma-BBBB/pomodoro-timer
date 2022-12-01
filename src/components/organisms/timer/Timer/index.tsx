@@ -9,11 +9,15 @@ import { dayjs } from '@/utils'
 
 import { FormForTimer } from '../FormForTimer'
 
+import type { AudioParams } from '@/hooks'
+
 export const Timer: FC = () => {
   const timer = useTimer()
   const setAudioSetting = useSetAtom(audioSettingsAtom)
-  const audioFilePath = 'src/audio/alerm.mp3'
-  const audio = useAudio(audioFilePath)
+  const audioParams: AudioParams = {
+    filePath: 'src/audio/alerm.mp3',
+  }
+  const audio = useAudio(audioParams)
 
   const setTimeHandler = (duration: number) => {
     timer.pause()
