@@ -3,23 +3,27 @@ import { useCallback, useMemo } from 'react'
 
 import { audioSettingsAtom } from '@/store'
 
+export type AudioParams = {
+  filePath: string
+}
+
 type Return = {
   readonly audio: HTMLAudioElement
   start: () => void
   pause: () => void
 }
 
-export const useAudio = (audioFilePath: string): Return => {
+export const useAudio = (audioParams: Readonly<AudioParams>): Return => {
   const [setting] = useAtom(audioSettingsAtom)
   const audio = useMemo(() => {
-    const audio = new Audio(audioFilePath)
+    const audio = new Audio(audioParams.filePath)
     audio.loop = true
     audio.defaultMuted = true
     if (setting !== undefined) {
       audio.muted = !setting.value
     }
     return audio
-  }, [audioFilePath, setting])
+  }, [audioParams.filePath, setting])
 
   const start = useCallback(() => {
     audio.load()
